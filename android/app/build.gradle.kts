@@ -7,9 +7,8 @@ plugins {
 
 android {
     namespace = "com.example.price_checker"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
 
-    // ✅ Explicitly set your correct NDK version (overrides the broken one)
     ndkVersion = "29.0.14206865"
 
     compileOptions {
@@ -23,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.price_checker"
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
