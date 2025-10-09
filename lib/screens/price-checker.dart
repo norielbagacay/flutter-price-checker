@@ -5,6 +5,7 @@ import 'product.dart';
 import 'about.dart';
 import 'reset.dart';
 import 'inventory.dart';
+import 'scanbarcode.dart';
 import '../data/database_helper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -159,6 +160,14 @@ class _PriceCheckerHomeState extends State<PriceCheckerHome> with WidgetsBinding
     );
   }
 
+  void _navigateToScanBarcode() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ScanBarcodePage()),
+    );
+    _resetAndLoadProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -263,44 +272,66 @@ class _PriceCheckerHomeState extends State<PriceCheckerHome> with WidgetsBinding
           // Search Bar
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             child: Column(
               children: [
-                TextField(
-                  controller: _searchController,
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
-                    _searchProducts(value);
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Search products or barcode...',
-                    prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                    suffixIcon: _searchQuery.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() {
-                                _searchQuery = '';
-                                _selectedProductId = null;
-                              });
-                              _searchProducts('');
-                            },
-                          )
-                        : null,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Colors.grey[300]!),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: (value) {
+                          setState(() {
+                            _searchQuery = value;
+                          });
+                          _searchProducts(value);
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Search products or barcode...',
+                          prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() {
+                                      _searchQuery = '';
+                                      _selectedProductId = null;
+                                    });
+                                    _searchProducts('');
+                                  },
+                                )
+                              : null,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: Colors.blue, width: 2),
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                        ),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: Colors.blue, width: 2),
+                    const SizedBox(width: 8),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.orange[600],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.qr_code_scanner,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: _navigateToScanBarcode,
+                        tooltip: 'Scan Barcode',
+                      ),
                     ),
-                    filled: true,
-                    fillColor: Colors.grey[50],
-                  ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 Container(
